@@ -1,0 +1,77 @@
+name: VeilStream Wait
+description: Wait for the VeilStream preview deployment for this commit (does not create or redeploy)
+author: VeilStream
+branding:
+  icon: clock
+  color: purple
+
+inputs:
+  api_key:
+    description: VeilStream REST or MCP API key (read scope is enough). Falls back to VEILSTREAM_API_KEY env.
+    required: false
+  region:
+    description: >
+      VeilStream data center / region for API + fork host.
+      One of: ovh-ca (Beauharnois), do-sfo (San Francisco).
+      Aliases: ca, sfo, beauharnois, …
+    required: false
+    default: ovh-ca
+  api_base_url:
+    description: Override VeilStream API base URL (defaults to the region's API, e.g. https://api-ca.veilstream.com)
+    required: false
+  repository:
+    description: GitHub repository as owner/repo. Defaults to GITHUB_REPOSITORY.
+    required: false
+  commit_sha:
+    description: Commit SHA to wait for. Defaults to GITHUB_SHA.
+    required: false
+  branch:
+    description: Branch / changeset used to find the preview environment. Defaults to GITHUB_HEAD_REF or GITHUB_REF_NAME.
+    required: false
+  pull_request:
+    description: Optional pull request number (informational / future disambiguation).
+    required: false
+  timeout_seconds:
+    description: Maximum seconds to wait for a ready deployment
+    required: false
+    default: "2700"
+  startup_grace_seconds:
+    description: How long to tolerate "no deployment for this SHA yet" while the App creates it
+    required: false
+    default: "300"
+  poll_interval_seconds:
+    description: Seconds between status polls
+    required: false
+    default: "5"
+  follow_superseded:
+    description: If true, retarget to the replacement deployment when superseded (default fails so cancel-in-progress can restart)
+    required: false
+    default: "false"
+
+outputs:
+  preview_url:
+    description: Preview environment URL
+  environment_id:
+    description: VeilStream environment id
+  deployment_id:
+    description: VeilStream deployment id that became ready
+  commit_sha:
+    description: Commit SHA that became ready
+  status:
+    description: Final deployment status
+  region:
+    description: Resolved region id (ovh-ca or do-sfo)
+  fork_name:
+    description: Snapshot fork_name for this environment when fork-wired; else empty
+  fork_public_id:
+    description: public_id of the first associated active snapshot fork
+  fork_database_slug:
+    description: Database slug for the first associated active snapshot fork
+  fork_host:
+    description: Regional psql-fork host for the first associated database (e.g. slug.psql-fork-ca.veilstream.com)
+  snapshot_forks:
+    description: JSON array of associated active snapshot forks (no passwords)
+
+runs:
+  using: node24
+  main: dist/index.js

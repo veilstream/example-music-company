@@ -20,12 +20,13 @@ This is an example of how to use VeilStream for a preview environment
 
 [`.github/workflows/preview-smoke.yml`](.github/workflows/preview-smoke.yml) waits for the VeilStream preview for the PR commit (without starting a second deploy), then curls the frontend and API.
 
-Required repository secrets:
+The wait step uses a vendored copy of the Action under [`.github/actions/veilstream-wait`](.github/actions/veilstream-wait) so this public demo does not need access to the private Action repo.
+
+Required repository secret:
 
 | Secret | Purpose |
 |--------|---------|
 | `VEILSTREAM_API_KEY` | Org REST or MCP API key (read is enough) for the **ovh-ca** data center |
-| `VEILSTREAM_GH_TOKEN` | GitHub PAT that can read `veilstream/veilstream-github-action` (private while testing). Drop this once the Action is public and switch the workflow to `uses: veilstream/veilstream-github-action@v1`. |
 
 Open a PR against this repo (with the GitHub App connected) to exercise the workflow.
 

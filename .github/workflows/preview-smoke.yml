@@ -16,20 +16,9 @@ jobs:
       - name: Checkout app
         uses: actions/checkout@v5
 
-      # Action repo is private while we test — clone it with a read token, then use locally.
-      # Once veilstream/veilstream-github-action is public, replace this + the local uses with:
-      #   uses: veilstream/veilstream-github-action@v1
-      - name: Checkout VeilStream wait action
-        uses: actions/checkout@v5
-        with:
-          repository: veilstream/veilstream-github-action
-          ref: main
-          path: ./.veilstream-wait
-          token: ${{ secrets.VEILSTREAM_GH_TOKEN }}
-
       - id: vs
         name: Wait for VeilStream preview
-        uses: ./.veilstream-wait
+        uses: ./.github/actions/veilstream-wait
         with:
           api_key: ${{ secrets.VEILSTREAM_API_KEY }}
           region: ovh-ca
