@@ -16,6 +16,19 @@ This is an example of how to use VeilStream for a preview environment
 ### 8) wait for the deployment
 ### 9) review the deployed version of this application
 
+## CI: wait for preview (GitHub Actions)
+
+[`.github/workflows/preview-smoke.yml`](.github/workflows/preview-smoke.yml) waits for the VeilStream preview for the PR commit (without starting a second deploy), then curls the frontend and API.
+
+Required repository secrets:
+
+| Secret | Purpose |
+|--------|---------|
+| `VEILSTREAM_API_KEY` | Org REST or MCP API key (read is enough) for the **ovh-ca** data center |
+| `VEILSTREAM_GH_TOKEN` | GitHub PAT that can read `veilstream/veilstream-github-action` (private while testing). Drop this once the Action is public and switch the workflow to `uses: veilstream/veilstream-github-action@v1`. |
+
+Open a PR against this repo (with the GitHub App connected) to exercise the workflow.
+
 ## What this example application is:
 
 It's the chinook dataset used to populate a postgres database, representing a music company. The app container is a react app that is the frontend talking to a simple fastapi api container backed by the postgres database.
