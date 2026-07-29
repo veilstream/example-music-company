@@ -18,7 +18,7 @@ jobs:
 
       - id: vs
         name: Wait for VeilStream preview
-        uses: ./.github/actions/veilstream-wait
+        uses: veilstream/veilstream-github-action@main
         with:
           api_key: ${{ secrets.VEILSTREAM_API_KEY }}
           region: do-sfo
