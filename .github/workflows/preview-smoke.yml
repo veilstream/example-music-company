@@ -21,7 +21,7 @@ jobs:
         uses: ./.github/actions/veilstream-wait
         with:
           api_key: ${{ secrets.VEILSTREAM_API_KEY }}
-          region: ovh-ca
+          region: do-sfo
 
       - name: Smoke preview URL
         env:

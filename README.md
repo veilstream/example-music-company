@@ -26,7 +26,7 @@ Required repository secret:
 
 | Secret | Purpose |
 |--------|---------|
-| `VEILSTREAM_API_KEY` | Org REST or MCP API key (read is enough) for the **ovh-ca** data center |
+| `VEILSTREAM_API_KEY` | Org REST or MCP API key (read is enough) for the **do-sfo** data center (`api-sfo.veilstream.com`) |
 
 Open a PR against this repo (with the GitHub App connected) to exercise the workflow.
 
