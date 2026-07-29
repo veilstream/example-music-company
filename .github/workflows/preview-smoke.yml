@@ -1,0 +1,44 @@
+name: Preview smoke
+
+on:
+  pull_request:
+
+concurrency:
+  group: preview-smoke-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout app
+        uses: actions/checkout@v5
+
+      - id: vs
+        name: Wait for VeilStream preview
+        uses: veilstream/veilstream-github-action@main
+        with:
+          api_key: ${{ secrets.VEILSTREAM_API_KEY }}
+          region: do-sfo
+
+      - name: Smoke preview URL
+        env:
+          BASE_URL: ${{ steps.vs.outputs.preview_url }}
+        run: |
+          set -euo pipefail
+          echo "preview_url=${BASE_URL}"
+          echo "region=${{ steps.vs.outputs.region }}"
+          echo "deployment_id=${{ steps.vs.outputs.deployment_id }}"
+          # Frontend
+          curl -fsS -o /dev/null -w "frontend %{http_code}\n" --retry 5 --retry-delay 2 --retry-all-errors "${BASE_URL}/"
+          # API (Chinook artists) — try /api and stripped-prefix forms
+          if curl -fsS --retry 3 --retry-delay 2 "${BASE_URL}/api/artists" | head -c 200; then
+            echo
+          elif curl -fsS --retry 3 --retry-delay 2 "${BASE_URL}/artists" | head -c 200; then
+            echo
+          else
+            echo "API smoke failed against ${BASE_URL}" >&2
+            exit 1
+          fi
